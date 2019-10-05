@@ -5,7 +5,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main2.*
-import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,15 +40,8 @@ class Main2Activity : AppCompatActivity() {
 
     fun createCoupons(): OlivettiClubBackendApi {
         val olivettiClubBaseUrl = "http://olivetticlub.dallagi.dev:5000"
-        val okHttpClient = OkHttpClient.Builder().addInterceptor { chain ->
-            val request = chain.request()
-                .newBuilder()
-                .build()
-            chain.proceed(request)
-        }.build()
 
         val retrofit = Retrofit.Builder()
-            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(olivettiClubBaseUrl)
             .build()
