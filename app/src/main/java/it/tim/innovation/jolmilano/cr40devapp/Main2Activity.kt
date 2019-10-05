@@ -20,7 +20,7 @@ class Main2Activity : AppCompatActivity() {
         setContentView(R.layout.activity_main2)
 
         create_coupons.setOnClickListener {
-            createCoupons().createCoupon(CouponCreationRequest("danielefongo", "descrizione", 1))
+            olivettiClubBackend().createCoupon(CouponCreationRequest("danielefongo", "descrizione", 1))
                 .enqueue(object :
                     Callback<CouponCreationResponse> {
                     override fun onFailure(call: Call<CouponCreationResponse>, t: Throwable) {
@@ -36,9 +36,28 @@ class Main2Activity : AppCompatActivity() {
 
                 })
         }
+
+
+        create_merchant.setOnClickListener {
+            olivettiClubBackend().createMerchant(MerchantCreationRequest("danielefogna", "123123123", "31.43.13", "via del cazzettino"))
+                .enqueue(object :
+                    Callback<MerchantCreationResponse> {
+                    override fun onFailure(call: Call<MerchantCreationResponse>, t: Throwable) {
+                        Toast.makeText(applicationContext, "errore", Toast.LENGTH_LONG).show()
+                    }
+
+                    override fun onResponse(
+                        call: Call<MerchantCreationResponse>,
+                        response: Response<MerchantCreationResponse>
+                    ) {
+                        Log.d("Main2Activity", response.body().toString())
+                    }
+
+                })
+        }
     }
 
-    fun createCoupons(): OlivettiClubBackendApi {
+    fun olivettiClubBackend(): OlivettiClubBackendApi {
         val olivettiClubBaseUrl = "http://olivetticlub.dallagi.dev:5000"
 
         val retrofit = Retrofit.Builder()
@@ -55,8 +74,16 @@ interface OlivettiClubBackendApi {
 
     @POST("coupons")
     fun createCoupon(@Body body: CouponCreationRequest): Call<CouponCreationResponse>
+
+    @POST("merchants")
+    fun createMerchant(@Body body: MerchantCreationRequest): Call<MerchantCreationResponse>
 }
 
 
 data class CouponCreationRequest(val merchant: String, val description: String, val count: Int)
 data class CouponCreationResponse(val merchant: String, val description: String, val count: Int)
+
+
+data class MerchantCreationRequest(val name: String, val vatNumber: String, val ateco: String, val address:String)
+data class MerchantCreationResponse(val name: String, val vatNumber: String, val ateco: String, val address:String, val deals: List<Deal>)
+data class Deal(val merchant:String, val description: String, val consumedCoupon: Int, val generatedCoupon:Int)
