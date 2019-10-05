@@ -15,8 +15,8 @@ android {
         setProperty("archivesBaseName", "cr40devapp-$versionName")
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    signingConfigs{
-        release{
+    signingConfigs {
+        release {
             keyAlias 'jol'
             keyPassword 'j0o1l2'
             storeFile file('jol.jks')
@@ -63,5 +63,5 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
-    implementation (name:'elaconnectorlib-2.0.1-dummy-release', ext:'aar')
+    implementation(name: 'elaconnectorlib-2.0.1-dummy-release', ext: 'aar')
 }

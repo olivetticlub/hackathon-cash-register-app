@@ -47,7 +47,7 @@
     <string name="last_created_coupon">Last Created Coupon</string>
 
     <string name="error_dialog_title">ERROR</string>
-    
+
     <string name="show_code_to_shop">Show this code to the shop</string>
     <string name="to_get_discount">to get your discount</string>
 
@@ -57,7 +57,7 @@
 
     //QrCode stuff
     <string name="waiting_for_qr_code_scan">Waiting for QrCode scan&#8230;</string>
-    
+
     //MENU
     <string name="diagnostics">DIAGNOSTICS</string>
     <string name="connect">CONNECT</string>
