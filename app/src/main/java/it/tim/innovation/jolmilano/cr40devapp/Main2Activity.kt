@@ -15,12 +15,20 @@ import retrofit2.http.POST
 
 class Main2Activity : AppCompatActivity() {
 
+    val service = OlivettiClubBackendServiceFactory.create()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
 
         create_coupons.setOnClickListener {
-            olivettiClubBackend().createCoupon(CouponCreationRequest("danielefongo", "descrizione", 1))
+            service.createCoupon(
+                CouponCreationRequest(
+                    "danielefongo",
+                    "descrizione",
+                    1
+                )
+            )
                 .enqueue(object :
                     Callback<CouponCreationResponse> {
                     override fun onFailure(call: Call<CouponCreationResponse>, t: Throwable) {
