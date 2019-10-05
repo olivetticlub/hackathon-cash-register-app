@@ -579,10 +579,18 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                                 40
                             }).execute()
                 }
+
+                broadcastPurchase()
             } else {
                 Utils.showDialog(this, getString(R.string.receipt_printed_ko), getString(R.string.receipt_printed_ko_message))
             }
         }
+    }
+
+    private fun broadcastPurchase() {
+        val intent = Intent()
+        intent.action = "olivetti.club.payment.completed"
+        sendBroadcast(intent)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
