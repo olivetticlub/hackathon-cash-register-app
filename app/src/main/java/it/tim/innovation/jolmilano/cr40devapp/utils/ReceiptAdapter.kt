@@ -42,7 +42,6 @@ class ReceiptAdapter internal constructor(val context: Context) : RecyclerView.A
     inner class ReceiptViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnLongClickListener, View.OnClickListener {
 
         val name = itemView.findViewById(R.id.productName) as TextView
-        val brand = itemView.findViewById(R.id.productBrand) as TextView
         val total = itemView.findViewById(R.id.productTotal) as TextView
         val quantity = itemView.findViewById(R.id.quantity) as TextView
 
@@ -78,7 +77,6 @@ class ReceiptAdapter internal constructor(val context: Context) : RecyclerView.A
 
         holder.quantity.text = item.quantity.toString()
         holder.name.text = item.prodName
-        holder.brand.text = String.format(context.getString(R.string.brand_string, item.prodBrand))
         holder.total.text = (item.price * item.quantity).div(100.00).toString()
     }
 

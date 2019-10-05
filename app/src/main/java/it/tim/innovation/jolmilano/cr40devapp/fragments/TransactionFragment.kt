@@ -190,22 +190,6 @@ class TransactionFragment : Fragment(), OperationsInterface {
                 }
             })
 
-            mTransactionsViewModel.getIsPromo20Switched().observe(this, Observer {
-                Log.d(TAG, "isPromo20Switched --> $it")
-                mIsPromo20Switched = it
-                if (it && mIsPromo40Switched) {
-                    switchPromo40.isChecked = false
-                }
-            })
-
-            mTransactionsViewModel.getIsPromo40Switched().observe(this, Observer {
-                Log.d(TAG, "isPromo40Switched --> $it")
-                mIsPromo40Switched = it
-                if (it && mIsPromo20Switched) {
-                    switchPromo20.isChecked = false
-                }
-            })
-
             mTransactionsViewModel.getItemByCouponId().observe(this, Observer { qrCodeItem: QrCodeItem? ->
                 if (qrCodeItem == null) {
                     //Show popup for QrCode not found
@@ -230,14 +214,6 @@ class TransactionFragment : Fragment(), OperationsInterface {
                     }
                 }
             })
-
-            switchPromo20.setOnCheckedChangeListener { _, active ->
-                mTransactionsViewModel.setIsPromo20Switched(active)
-            }
-
-            switchPromo40.setOnCheckedChangeListener { _, active ->
-                mTransactionsViewModel.setIsPromo40Switched(active)
-            }
 
             /*actionFab.setOnClickListener {
                 if (mIsFabMenuExpanded) {

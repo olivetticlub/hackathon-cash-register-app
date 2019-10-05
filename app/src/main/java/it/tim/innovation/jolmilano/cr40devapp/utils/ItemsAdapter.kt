@@ -44,7 +44,6 @@ class ItemsAdapter internal constructor(context: Context) : RecyclerView.Adapter
 
         val image = itemView.findViewById(R.id.productImage) as ImageView
         val product = itemView.findViewById(R.id.productName) as TextView
-        val brand = itemView.findViewById(R.id.productBrand) as TextView
         val price = itemView.findViewById(R.id.productPrice) as TextView
 
         init {
@@ -76,7 +75,6 @@ class ItemsAdapter internal constructor(context: Context) : RecyclerView.Adapter
         val item = mItems[position]
 
         holder.product.text = item.product
-        holder.brand.text = item.brand
         holder.price.text = item.price.div(Constants.RECEIPT_ROUND).toString()
     }
 

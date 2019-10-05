@@ -51,13 +51,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
+    
+    <GridView
         android:id="@+id/productsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/generic_padding"
-        tools:listitem="@layout/product_item" />
+        tools:listitem="@layout/product_item"
+        android:numColumns="3">
+
+    </GridView>
 
     <TextView
         android:id="@+id/noItemsTv"
