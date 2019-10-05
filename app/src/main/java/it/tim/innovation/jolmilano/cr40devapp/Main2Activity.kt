@@ -8,19 +8,23 @@ import kotlinx.android.synthetic.main.activity_main2.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.POST
 
 class Main2Activity : AppCompatActivity() {
+
+    val service = OlivettiClubBackendServiceFactory.create()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
 
         create_coupons.setOnClickListener {
-            createCoupons().createCoupon(CouponCreationRequest("danielefongo", "descrizione", 1))
+            service.createCoupon(
+                CouponCreationRequest(
+                    "danielefongo",
+                    "descrizione",
+                    1
+                )
+            )
                 .enqueue(object :
                     Callback<CouponCreationResponse> {
                     override fun onFailure(call: Call<CouponCreationResponse>, t: Throwable) {
@@ -38,25 +42,5 @@ class Main2Activity : AppCompatActivity() {
         }
     }
 
-    fun createCoupons(): OlivettiClubBackendApi {
-        val olivettiClubBaseUrl = "http://olivetticlub.dallagi.dev:5000"
-
-        val retrofit = Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(olivettiClubBaseUrl)
-            .build()
-
-        return retrofit.create(OlivettiClubBackendApi::class.java)
-    }
-
 }
 
-interface OlivettiClubBackendApi {
-
-    @POST("coupons")
-    fun createCoupon(@Body body: CouponCreationRequest): Call<CouponCreationResponse>
-}
-
-
-data class CouponCreationRequest(val merchant: String, val description: String, val count: Int)
-data class CouponCreationResponse(val merchant: String, val description: String, val count: Int)
