@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CashRegister 4.0 Demo App</string>
+    <string name="app_name">Olivetti CLUB CashRegister 4.0</string>
     <string name="products_title">Available Products</string>
     <string name="bill_title">Current receipt</string>
     <string name="discount_applied_percent">DISCOUNT PERCENT %.2f%% Total DISCOUNT %.2f €</string>

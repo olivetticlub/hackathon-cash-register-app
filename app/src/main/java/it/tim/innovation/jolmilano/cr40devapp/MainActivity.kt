@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
     private var mSocketConnected = false
     private var mQrCodeList = listOf<QrCodeItem>()
     private var invokeElaConnectorServiceCallback: (IElaPrinter) -> Unit = {}
-    
+
     private var mSocketBroadcast = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.let {
@@ -141,9 +141,9 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                     //Only show popup when KO occurs
                     runOnUiThread {
                         Utils.showDialog(
-                                this@MainActivity,
-                                elaResponse::class.java.simpleName,
-                                elaResponse.toString()
+                            this@MainActivity,
+                            elaResponse::class.java.simpleName,
+                            elaResponse.toString()
                         )
                     }
                 }
@@ -172,11 +172,15 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        LocalBroadcastManager.getInstance(this).registerReceiver(mSocketBroadcast, IntentFilter(BroadcastValues.SOCKET_ACTION))
-        mMainActivityViewModel = ViewModelProviders.of(this@MainActivity).get(MainActivityViewModel::class.java)
+        LocalBroadcastManager.getInstance(this)
+            .registerReceiver(mSocketBroadcast, IntentFilter(BroadcastValues.SOCKET_ACTION))
+        mMainActivityViewModel =
+            ViewModelProviders.of(this@MainActivity).get(MainActivityViewModel::class.java)
 
-        val displayManager = applicationContext.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-        val presentationDisplays = displayManager.getDisplays(DisplayManager.DISPLAY_CATEGORY_PRESENTATION)
+        val displayManager =
+            applicationContext.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+        val presentationDisplays =
+            displayManager.getDisplays(DisplayManager.DISPLAY_CATEGORY_PRESENTATION)
         Log.d(TAG, "Current device has " + presentationDisplays.size + " mMainPresentation display")
 
         Log.d(TAG, "storeID --> ${ConfigurationManager.getInstance(this).storeId}")
@@ -221,19 +225,25 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                         try {
                             val barcodeEncoder = BarcodeEncoder()
                             val bitmap =
-                                    //We check if it's to Print a QrCode coupon or Barcode coupon
-                                    if (CouponType.fromInt(configManager.couponType) == CouponType.BARCODE) {
-                                        //User selected to print a Barcode Coupon
-                                        barcodeEncoder.encodeBitmap(
-                                                /*3 Chars for StoreID*/ConfigurationManager.getInstance(this).storeId
-                                                .plus(/*Special Char*/"-")
-                                                .plus(lastItemAdded.timestampCreated.toString()),
-                                                BarcodeFormat.CODE_39,
-                                                250, 150)
-                                    } else {
-                                        //User selected to print a QrCode Coupon
-                                        barcodeEncoder.encodeBitmap(url.toString(), BarcodeFormat.QR_CODE, 220, 220)
-                                    }
+                                //We check if it's to Print a QrCode coupon or Barcode coupon
+                                if (CouponType.fromInt(configManager.couponType) == CouponType.BARCODE) {
+                                    //User selected to print a Barcode Coupon
+                                    barcodeEncoder.encodeBitmap(
+                                        /*3 Chars for StoreID*/ConfigurationManager.getInstance(this).storeId
+                                            .plus(/*Special Char*/"-")
+                                            .plus(lastItemAdded.timestampCreated.toString()),
+                                        BarcodeFormat.CODE_39,
+                                        250, 150
+                                    )
+                                } else {
+                                    //User selected to print a QrCode Coupon
+                                    barcodeEncoder.encodeBitmap(
+                                        url.toString(),
+                                        BarcodeFormat.QR_CODE,
+                                        220,
+                                        220
+                                    )
+                                }
                             mInsertFragmentInterface.setQrCodeImage(bitmap)
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -258,18 +268,29 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                                     footerList.add("")
 
                                     val barcodeString =
-                                            ConfigurationManager.getInstance(this).storeId /*3 Chars for StoreID*/
-                                                    .plus(/*Special Char*/"-")
-                                                    .plus(lastItemAdded.timestampCreated.toString())
+                                        ConfigurationManager.getInstance(this)
+                                            .storeId /*3 Chars for StoreID*/
+                                            .plus(/*Special Char*/"-")
+                                            .plus(lastItemAdded.timestampCreated.toString())
 
-                                    val barcode = Barcode(headerList, footerList, CodeType.COD_39, barcodeString, StationType.RICEVUTA)
+                                    val barcode = Barcode(
+                                        headerList,
+                                        footerList,
+                                        CodeType.COD_39,
+                                        barcodeString,
+                                        StationType.RICEVUTA
+                                    )
 
                                     it.printCoupon(barcode)
                                 }
                             } catch (e: Exception) {
                                 e.printStackTrace()
                                 e.message?.let { message ->
-                                    Utils.showDialog(this@MainActivity, getString(R.string.error_dialog_title), message)
+                                    Utils.showDialog(
+                                        this@MainActivity,
+                                        getString(R.string.error_dialog_title),
+                                        message
+                                    )
                                 }
                             }
                         }
@@ -303,6 +324,12 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         item?.itemId.let { itemId ->
+
+            if (itemId == R.id.addCoupons) {
+                startActivity(Intent(this, AddCouponsActivity::class.java))
+            }
+
+
             if (itemId == R.id.connect) {
                 invokeElaConnectorService { service: IElaPrinter ->
                     manageElaConnectorConnection(service.getHost(), service.getPort())
@@ -336,7 +363,8 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                             true
                         }
                         R.id.setIpAndPort -> {
-                            val builder = AlertDialog.Builder(this@MainActivity).setTitle(getString(R.string.set_ip_and_port))
+                            val builder = AlertDialog.Builder(this@MainActivity)
+                                .setTitle(getString(R.string.set_ip_and_port))
                             val inflater = layoutInflater
                             val dialogView = inflater.inflate(R.layout.ip_port_config_layout, null)
                             builder.setView(dialogView)
@@ -355,10 +383,12 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                                         service.setHost(ipEt.text.toString())
                                     }
                                     if (portEt.text != null) {
-                                        portEt.text.toString().toIntOrNull()?.let { service.setPort(it) }
+                                        portEt.text.toString().toIntOrNull()
+                                            ?.let { service.setPort(it) }
                                     }
                                 }
-                                val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                                val imm =
+                                    getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                                 var view = currentFocus
                                 if (view == null) {
                                     view = View(this@MainActivity)
@@ -385,23 +415,28 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                             true
                         }
                         R.id.setConfigurationData -> {
-                            val builder = AlertDialog.Builder(this@MainActivity).setTitle(getString(R.string.set_configuration_data))
+                            val builder = AlertDialog.Builder(this@MainActivity)
+                                .setTitle(getString(R.string.set_configuration_data))
                             val inflater = layoutInflater
                             val dialogView = inflater.inflate(R.layout.config_layout, null)
                             builder.setView(dialogView)
 
                             val queueDelayEt = dialogView.findViewById<EditText>(R.id.queueDelay)
-                            val connectionTimeoutEt = dialogView.findViewById<EditText>(R.id.connectionTimeout)
-                            val connectionRetryEt = dialogView.findViewById<EditText>(R.id.connectionRetry)
+                            val connectionTimeoutEt =
+                                dialogView.findViewById<EditText>(R.id.connectionTimeout)
+                            val connectionRetryEt =
+                                dialogView.findViewById<EditText>(R.id.connectionRetry)
 
                             builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
                                 invokeElaConnectorService { service: IElaPrinter ->
                                     service.setConfigurationData(
-                                            queueDelayEt.text.toString().toLongOrNull(),
-                                            connectionTimeoutEt.text.toString().toIntOrNull(),
-                                            connectionRetryEt.text.toString().toIntOrNull())
+                                        queueDelayEt.text.toString().toLongOrNull(),
+                                        connectionTimeoutEt.text.toString().toIntOrNull(),
+                                        connectionRetryEt.text.toString().toIntOrNull()
+                                    )
                                 }
-                                val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                                val imm =
+                                    getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                                 var view = currentFocus
                                 if (view == null) {
                                     view = View(this@MainActivity)
@@ -413,13 +448,18 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                             true
                         }
                         R.id.getInfoPrinter -> {
-                            val builder = AlertDialog.Builder(this@MainActivity).setTitle(getString(R.string.get_info_printer))
+                            val builder = AlertDialog.Builder(this@MainActivity)
+                                .setTitle(getString(R.string.get_info_printer))
                             val inflater = layoutInflater
                             val dialogView = inflater.inflate(R.layout.get_info_layout, null)
                             builder.setView(dialogView)
 
                             val spinner = dialogView.findViewById<Spinner>(R.id.spinner)
-                            val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, GetInfoPrinterInfo.values())
+                            val spinnerAdapter = ArrayAdapter(
+                                this,
+                                android.R.layout.simple_spinner_dropdown_item,
+                                GetInfoPrinterInfo.values()
+                            )
                             spinner.adapter = spinnerAdapter
 
 
@@ -436,21 +476,27 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                             true
                         }
                         R.id.setCashier -> {
-                            val builder = AlertDialog.Builder(this@MainActivity).setTitle(getString(R.string.set_cashier_name))
+                            val builder = AlertDialog.Builder(this@MainActivity)
+                                .setTitle(getString(R.string.set_cashier_name))
                             val editText = EditText(this@MainActivity)
                             editText.hint = getString(R.string.set_cashier_name)
-                            editText.inputType = InputType.TYPE_CLASS_TEXT; InputType.TYPE_TEXT_VARIATION_NORMAL
+                            editText.inputType =
+                                InputType.TYPE_CLASS_TEXT; InputType.TYPE_TEXT_VARIATION_NORMAL
                             builder.setView(editText)
                             builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
                                 if (!editText.text.toString().equals("")) {
                                     mOperationsInterface.onOperationOngoing()
                                     val cashierName = editText.text.toString()
                                     invokeElaConnectorService {
-                                        it.setCodeCashCashierWaiterFiscmod(cashierName, CodeCashCashierWaiterType.RICHIESTA_SET_CODICE_CASSIERE)
+                                        it.setCodeCashCashierWaiterFiscmod(
+                                            cashierName,
+                                            CodeCashCashierWaiterType.RICHIESTA_SET_CODICE_CASSIERE
+                                        )
                                     }
                                 }
 
-                                val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                                val imm =
+                                    getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                                 var view = currentFocus
                                 if (view == null) {
                                     view = View(this@MainActivity)
@@ -462,15 +508,20 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                             true
                         }
                         R.id.setHeader -> {
-                            val builder = AlertDialog.Builder(this@MainActivity).setTitle(getString(R.string.set_header))
+                            val builder = AlertDialog.Builder(this@MainActivity)
+                                .setTitle(getString(R.string.set_header))
                             val inflater = layoutInflater
                             val dialogView = inflater.inflate(R.layout.set_header_layout, null)
                             builder.setView(dialogView)
 
-                            val headerFirstLineEt = dialogView.findViewById<EditText>(R.id.headerFirstLine)
-                            val headerSecondLineEt = dialogView.findViewById<EditText>(R.id.headerSecondLine)
-                            val headerThirdLineEt = dialogView.findViewById<EditText>(R.id.headerThirdLine)
-                            val headerFourthLineEt = dialogView.findViewById<EditText>(R.id.headerFourthLine)
+                            val headerFirstLineEt =
+                                dialogView.findViewById<EditText>(R.id.headerFirstLine)
+                            val headerSecondLineEt =
+                                dialogView.findViewById<EditText>(R.id.headerSecondLine)
+                            val headerThirdLineEt =
+                                dialogView.findViewById<EditText>(R.id.headerThirdLine)
+                            val headerFourthLineEt =
+                                dialogView.findViewById<EditText>(R.id.headerFourthLine)
 
                             builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
                                 val headerList = ArrayList<String>()
@@ -483,10 +534,19 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                                 invokeElaConnectorService { service: IElaPrinter ->
                                     mOperationsInterface.onOperationOngoing()
                                     for (x in 0 until headerList.size) {
-                                        service.setHeaderFooterFiscmod(x + 1, headerList[x], PrinterFontAttributes.NO_ATTRIBUTI, 1, HeaderFooterType.HEADER, null, null)
+                                        service.setHeaderFooterFiscmod(
+                                            x + 1,
+                                            headerList[x],
+                                            PrinterFontAttributes.NO_ATTRIBUTI,
+                                            1,
+                                            HeaderFooterType.HEADER,
+                                            null,
+                                            null
+                                        )
                                     }
                                 }
-                                val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                                val imm =
+                                    getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                                 var view = currentFocus
                                 if (view == null) {
                                     view = View(this@MainActivity)
@@ -499,15 +559,15 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                         }
                         R.id.setCouponType -> {
                             ConfigurationManager.getInstance(this).couponType =
-                                    if (item != null) {
-                                        if (item.isChecked) {
-                                            CouponType.BARCODE.value
-                                        } else {
-                                            CouponType.QR_CODE.value
-                                        }
-                                    } else {
+                                if (item != null) {
+                                    if (item.isChecked) {
                                         CouponType.BARCODE.value
+                                    } else {
+                                        CouponType.QR_CODE.value
                                     }
+                                } else {
+                                    CouponType.BARCODE.value
+                                }
                             true
                         }
                         else -> {
@@ -542,9 +602,19 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
         mTransactionPresentation?.dismiss()
     }
 
-    override fun onPrintFiscalReceipt(list: List<ReceiptLine>, discountTotal: Int, discountPercent: Int, isPromo20Switched: Boolean, isPromo40Switched: Boolean) {
+    override fun onPrintFiscalReceipt(
+        list: List<ReceiptLine>,
+        discountTotal: Int,
+        discountPercent: Int,
+        isPromo20Switched: Boolean,
+        isPromo40Switched: Boolean
+    ) {
         if (!mSocketConnected) {
-            Utils.showDialog(this, getString(R.string.receipt_printed_ko), getString(R.string.receipt_printed_ko_message_about_connection))
+            Utils.showDialog(
+                this,
+                getString(R.string.receipt_printed_ko),
+                getString(R.string.receipt_printed_ko_message_about_connection)
+            )
         } else {
             if (list.isNotEmpty()) {
                 mCanOpenMenu = false
@@ -555,7 +625,14 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                     val receiptItemList = arrayListOf<ReceiptItem>()
 
                     for (item in list) {
-                        val receiptItem = ReceiptItem(item.barcodeId, item.quantity, item.prodName, item.prodBrand, item.price, item.total)
+                        val receiptItem = ReceiptItem(
+                            item.barcodeId,
+                            item.quantity,
+                            item.prodName,
+                            item.prodBrand,
+                            item.price,
+                            item.total
+                        )
                         receiptItemList.add(receiptItem)
                     }
 
@@ -568,19 +645,24 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                 this.mIsPromo40Switched = isPromo40Switched
                 if (isPromo20Switched || isPromo40Switched) {
                     GenerateQrCodeTask(
-                            this@MainActivity,
-                            DiscountType.DISCOUNT.name,
-                            "Your Next Discount",
-                            "Come and get this discount",
-                            "http://parkcitywindowwashing.com/wp-content/uploads/2017/03/10-off.png",
-                            if (isPromo20Switched) {
-                                20
-                            } else {
-                                40
-                            }).execute()
+                        this@MainActivity,
+                        DiscountType.DISCOUNT.name,
+                        "Your Next Discount",
+                        "Come and get this discount",
+                        "http://parkcitywindowwashing.com/wp-content/uploads/2017/03/10-off.png",
+                        if (isPromo20Switched) {
+                            20
+                        } else {
+                            40
+                        }
+                    ).execute()
                 }
             } else {
-                Utils.showDialog(this, getString(R.string.receipt_printed_ko), getString(R.string.receipt_printed_ko_message))
+                Utils.showDialog(
+                    this,
+                    getString(R.string.receipt_printed_ko),
+                    getString(R.string.receipt_printed_ko_message)
+                )
             }
         }
     }
@@ -610,14 +692,15 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
     }
 
     private class GenerateQrCodeTask internal constructor(
-            activity: MainActivity,
-            private val discountType: String,
-            private val title: String,
-            private val description: String,
-            private val imgUrl: String,
-            private val discountPercent: Int,
-            private val discount: Int = 0,
-            private val timestampCreated: Long = System.currentTimeMillis()) : AsyncTask<Void, Void, String?>() {
+        activity: MainActivity,
+        private val discountType: String,
+        private val title: String,
+        private val description: String,
+        private val imgUrl: String,
+        private val discountPercent: Int,
+        private val discount: Int = 0,
+        private val timestampCreated: Long = System.currentTimeMillis()
+    ) : AsyncTask<Void, Void, String?>() {
 
         private val mRef: WeakReference<MainActivity> = WeakReference(activity)
 
@@ -635,22 +718,24 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                 result?.let { it: String ->
                     if (!it.equals("")) {
                         //Insert in DB or BE
-                        val isToPrintQrCode = CouponType.fromInt(ConfigurationManager.getInstance(mainActivity.safeContext()).couponType) == CouponType.QR_CODE
+                        val isToPrintQrCode =
+                            CouponType.fromInt(ConfigurationManager.getInstance(mainActivity.safeContext()).couponType) == CouponType.QR_CODE
                         val qrCodeItem = QrCodeItem(
-                                if (isToPrintQrCode) {
-                                    it
-                                } else {
-                                    timestampCreated.toString()
-                                },
-                                discountType,
-                                title,
-                                description,
-                                discount,
-                                discountPercent,
-                                timestampCreated,
-                                timestampCreated.plus(2592000000),//1 Month,
-                                0,
-                                imgUrl)
+                            if (isToPrintQrCode) {
+                                it
+                            } else {
+                                timestampCreated.toString()
+                            },
+                            discountType,
+                            title,
+                            description,
+                            discount,
+                            discountPercent,
+                            timestampCreated,
+                            timestampCreated.plus(2592000000),//1 Month,
+                            0,
+                            imgUrl
+                        )
 
                         mainActivity.mMainActivityViewModel.insert(qrCodeItem)
                     }
@@ -659,7 +744,8 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
         }
     }
 
-    private class StoreIdTask internal constructor(activity: MainActivity) : AsyncTask<Void, Void, String>() {
+    private class StoreIdTask internal constructor(activity: MainActivity) :
+        AsyncTask<Void, Void, String>() {
 
         private val mRef: WeakReference<MainActivity> = WeakReference(activity)
 

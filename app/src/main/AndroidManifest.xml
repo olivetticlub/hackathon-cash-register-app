@@ -9,7 +9,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".AddCouponsActivity"
+            android:screenOrientation="landscape"></activity>
+        <activity
             android:name=".Main2Activity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden">
+
+        </activity>
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
@@ -18,10 +27,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
         <activity android:name=".ResponsesActivity" />
     </application>
 

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="20dp"
+    tools:context=".AddCouponsActivity">
+
+    <ImageView
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:src="@drawable/ic_add_coupon"></ImageView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quanti Coupons vuoi generare?"
+        android:textSize="26dp">
+
+    </TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+
+        android:orientation="horizontal">
+
+        <NumberPicker
+            android:layout_margin="10dp"
+            android:id="@+id/couponNumberPicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants"
+            android:textSize="26dp">
+
+        </NumberPicker>
+
+        <TextView
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="per uno sconto di "
+            android:textSize="26dp">
+
+        </TextView>
+
+        <NumberPicker
+            android:layout_margin="10dp"
+            android:id="@+id/discountPercentPicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants"
+            android:textSize="26dp"></NumberPicker>
+
+        <TextView
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="%"
+            android:textSize="26dp"></TextView>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="26dp"
+        android:text="Genera"
+        android:textAllCaps="false"
+        android:padding="10dp"></Button>
+</LinearLayout>
