@@ -20,8 +20,8 @@ class Main2Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
 
-        go.setOnClickListener {
-            createCoupons().createCoupon(CouponCreationRequest("danielefongo", "ciao dallag", 1))
+        create_coupons.setOnClickListener {
+            createCoupons().createCoupon(CouponCreationRequest("danielefongo", "descrizione", 1))
                 .enqueue(object :
                     Callback<CouponCreationResponse> {
                     override fun onFailure(call: Call<CouponCreationResponse>, t: Throwable) {
@@ -33,7 +33,6 @@ class Main2Activity : AppCompatActivity() {
                         response: Response<CouponCreationResponse>
                     ) {
                         Log.d("Main2Activity", response.body().toString())
-
                     }
 
                 })
@@ -41,6 +40,7 @@ class Main2Activity : AppCompatActivity() {
     }
 
     fun createCoupons(): OlivettiClubBackendApi {
+        val olivettiClubBaseUrl = "http://olivetticlub.dallagi.dev:5000"
         val okHttpClient = OkHttpClient.Builder().addInterceptor { chain ->
             val request = chain.request()
                 .newBuilder()
@@ -51,7 +51,7 @@ class Main2Activity : AppCompatActivity() {
         val retrofit = Retrofit.Builder()
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("http://olivetticlub.dallagi.dev:5000")
+            .baseUrl(olivettiClubBaseUrl)
             .build()
 
         return retrofit.create(OlivettiClubBackendApi::class.java)
@@ -60,6 +60,7 @@ class Main2Activity : AppCompatActivity() {
 }
 
 interface OlivettiClubBackendApi {
+
     @POST("coupons")
     fun createCoupon(@Body body: CouponCreationRequest): Call<CouponCreationResponse>
 }

@@ -12,18 +12,16 @@
             android:name=".Main2Activity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden">
-
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
         <activity android:name=".ResponsesActivity" />
     </application>
 
