@@ -120,6 +120,7 @@ class ProductsListFragment : Fragment() {
                 val token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImhhY2thdGhvbiIsInVzZXJUeXBlIjoicmVndWxhciIsImlhdCI6MTU2OTMzNDk0Mn0.wf6JYu6zt0gCxNPMPRWFae9vvlZrj9eaRAgXJIDP3kM"
                 val baseURL = "https://www.selfscanner.net/wsbackend/users/hackathon/"
                 selfScannerRestServiceApi(token, baseURL).products().enqueue(object : Callback<SelfScannerResponse> {
+
                     override fun onFailure(call: Call<SelfScannerResponse>, t: Throwable) {
                         Toast.makeText(context!!, t.localizedMessage, Toast.LENGTH_LONG).show()
                     }
