@@ -38,6 +38,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -572,11 +573,13 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
         isPromo40Switched: Boolean
     ) {
         if (!mSocketConnected) {
-            Utils.showDialog(
-                this,
-                "Error",
-                "Printer not connected"
-            )
+            if (list.isNotEmpty()) {
+                mCanOpenMenu = false
+                mResponseList.clear()
+                mOperationsInterface.onOperationFinished()
+                Toast.makeText(this, "Printing receipt...", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Printing coupon...", Toast.LENGTH_LONG).show()
+            }
         } else {
             if (list.isNotEmpty()) {
                 mCanOpenMenu = false
@@ -602,46 +605,48 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
 
                     it.printReceipt(receipt)
 
-
+                    printCoupon()
                 }
             }
         }
+    }
 
+    private fun printCoupon() {
         invokeElaConnectorService {
             try {
                 //if (CouponType.fromInt(configManager.couponType) == CouponType.BARCODE) {
-                    //Print Barcode
-                    val headerList = arrayListOf<String>()
-                    headerList.add("")
-                    headerList.add("")
-                    headerList.add("Coupon for a 10% discount")
-                    headerList.add("at 'Bar da Bonte'")
-                    headerList.add("via Travai, 3 TN")
-                    headerList.add("")
-                    headerList.add("")
+                //Print Barcode
+                val headerList = arrayListOf<String>()
+                headerList.add("")
+                headerList.add("")
+                headerList.add("Coupon for a 10% discount")
+                headerList.add("at 'Bar da Bonte'")
+                headerList.add("via Travai, 3 TN")
+                headerList.add("")
+                headerList.add("")
 
-                    val footerList = arrayListOf<String>()
-                    footerList.add("")
-                    footerList.add("")
-                    footerList.add("Scan the code with the app")
-                    footerList.add("to have it always with you")
-                    footerList.add("")
+                val footerList = arrayListOf<String>()
+                footerList.add("")
+                footerList.add("")
+                footerList.add("Scan the code with the app")
+                footerList.add("to have it always with you")
+                footerList.add("")
 
-                    val barcodeString =
-                        ConfigurationManager.getInstance(this)
-                            .storeId /*3 Chars for StoreID*/
-                            .plus(/*Special Char*/"-")
-                            .plus("ciaociao")
+                val barcodeString =
+                    ConfigurationManager.getInstance(this)
+                        .storeId /*3 Chars for StoreID*/
+                        .plus(/*Special Char*/"-")
+                        .plus("ciaociao")
 
-                    val barcode = Barcode(
-                        headerList,
-                        footerList,
-                        CodeType.COD_39,
-                        barcodeString,
-                        StationType.RICEVUTA
-                    )
+                val barcode = Barcode(
+                    headerList,
+                    footerList,
+                    CodeType.COD_39,
+                    barcodeString,
+                    StationType.RICEVUTA
+                )
 
-                    it.printCoupon(barcode)
+                it.printCoupon(barcode)
 
                 //}
             } catch (e: Exception) {
@@ -655,10 +660,6 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                 }
             }
         }
-
-
-
-
     }
 
     private fun broadcastPurchase() {
