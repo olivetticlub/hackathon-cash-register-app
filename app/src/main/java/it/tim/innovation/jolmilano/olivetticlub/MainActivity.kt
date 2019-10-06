@@ -93,8 +93,6 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
     private var mQrCodeList = listOf<QrCodeItem>()
     private var invokeElaConnectorServiceCallback: (IElaPrinter) -> Unit = {}
 
-    private var printerConnectionObservers = mutableListOf<PrinterConnectionObserver>()
-
     private var mSocketBroadcast = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             intent?.let {
@@ -104,10 +102,6 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                         "CONNECTED"
                     } else {
                         "DISCONNECTED"
-                    }
-
-                    printerConnectionObservers.forEach { observer ->
-                        observer.onConnectionChanged(mSocketConnected)
                     }
 
                     Utils.showSnackBar(rootLayout, socketConnected)
@@ -623,57 +617,40 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
         isPromo40Switched: Boolean
     ) {
         if (!mSocketConnected) {
-            connectPrint()
-        }
+            Utils.showDialog(
+                this,
+                "Error",
+                "Printer not connected"
+            )
+        } else {
+            if (list.isNotEmpty()) {
+                mCanOpenMenu = false
+                mResponseList.clear()
+                mOperationsInterface.onOperationOngoing()
+                invokeElaConnectorService {
 
-        if (list.isNotEmpty()) {
-            mCanOpenMenu = false
-            mResponseList.clear()
-            mOperationsInterface.onOperationOngoing()
-            invokeElaConnectorService {
+                    val receiptItemList = arrayListOf<ReceiptItem>()
 
-                val receiptItemList = arrayListOf<ReceiptItem>()
+                    for (item in list) {
+                        val receiptItem = ReceiptItem(
+                            item.barcodeId,
+                            item.quantity,
+                            item.prodName,
+                            item.prodBrand,
+                            item.price,
+                            item.total
+                        )
+                        receiptItemList.add(receiptItem)
+                    }
 
-                for (item in list) {
-                    val receiptItem = ReceiptItem(
-                        item.barcodeId,
-                        item.quantity,
-                        item.prodName,
-                        item.prodBrand,
-                        item.price,
-                        item.total
-                    )
-                    receiptItemList.add(receiptItem)
-                }
+                    val receipt = Receipt(receiptItemList, discountTotal, discountPercent, true)
 
-                val receipt = Receipt(receiptItemList, discountTotal, discountPercent, true)
-
-                if (mSocketConnected) {
                     it.printReceipt(receipt)
                     it.disconnect()
                     broadcastPurchase()
-                } else {
-                    connectPrint()
-                    printerConnectionObservers.add(object : PrinterConnectionObserver {
-                        override fun onConnectionChanged(connected: Boolean) {
-                            if (connected) {
-                                it.printReceipt(receipt)
-                                it.disconnect()
-                                broadcastPurchase()
-                                printerConnectionObservers.remove(this)
-                            }
-                        }
-                    })
                 }
             }
-        } else {
-            Utils.showDialog(
-                this,
-                getString(R.string.receipt_printed_ko),
-                getString(R.string.receipt_printed_ko_message)
-            )
         }
-
     }
 
     private fun broadcastPurchase() {
