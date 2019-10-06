@@ -1,16 +1,7 @@
-# cr40-hackathon
 
-Android app example for the Olivetti Cash Register 4.0 (CR4.0) Hackathon
 
-Goal of this app is to show simple examples of how to use the main APIs available on the Olivetti Cash Register 4.0 platform
-and selected for the Hack.
-These APIs are not ready for production, final, or comprehensive of all APIs available on the platform.
+Basic example of a checkout application using the Olivetti Cash Register 4.0 platform. 
 
-The simple functionalities used in the app as examples are:
+This is a modified version of the example provided by the Olivetti dev team.
 
-### Cash register second screen manager
-SW module for managing the front screen of CR4.0 towards the customer
-### Fiscal printer connector
-SW module for the integration of CR4.0 with Olivetti fiscal printer
-### Barcode scanner connector
-SW module for integration with the barcode reader
+We simplified the checkout process to fit our needs and most importantly to send the signal to the Olivetti Club Merchant Halp (https://github.com/olivetticlub/olivetti-club-merchant-app) that the payment is completed and a coupon can be generated
