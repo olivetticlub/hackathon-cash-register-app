@@ -262,51 +262,6 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                             e.printStackTrace()
                         }
 
-                        invokeElaConnectorService {
-                            try {
-                                if (CouponType.fromInt(configManager.couponType) == CouponType.BARCODE) {
-                                    //Print Barcode
-                                    val headerList = arrayListOf<String>()
-                                    headerList.add("")
-                                    headerList.add("")
-                                    headerList.add(getString(R.string.show_code_to_shop))
-                                    headerList.add(getString(R.string.to_get_discount))
-                                    headerList.add("")
-
-                                    val footerList = arrayListOf<String>()
-                                    footerList.add("")
-                                    footerList.add("")
-                                    footerList.add("")
-                                    footerList.add("")
-                                    footerList.add("")
-
-                                    val barcodeString =
-                                        ConfigurationManager.getInstance(this)
-                                            .storeId /*3 Chars for StoreID*/
-                                            .plus(/*Special Char*/"-")
-                                            .plus(lastItemAdded.timestampCreated.toString())
-
-                                    val barcode = Barcode(
-                                        headerList,
-                                        footerList,
-                                        CodeType.COD_39,
-                                        barcodeString,
-                                        StationType.RICEVUTA
-                                    )
-
-                                    it.printCoupon(barcode)
-                                }
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                                e.message?.let { message ->
-                                    Utils.showDialog(
-                                        this@MainActivity,
-                                        getString(R.string.error_dialog_title),
-                                        message
-                                    )
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -646,11 +601,64 @@ class MainActivity : AppCompatActivity(), TransactionFragment.FiscalReceipt {
                     val receipt = Receipt(receiptItemList, discountTotal, discountPercent, true)
 
                     it.printReceipt(receipt)
-                    it.disconnect()
-                    broadcastPurchase()
+
+
                 }
             }
         }
+
+        invokeElaConnectorService {
+            try {
+                //if (CouponType.fromInt(configManager.couponType) == CouponType.BARCODE) {
+                    //Print Barcode
+                    val headerList = arrayListOf<String>()
+                    headerList.add("")
+                    headerList.add("")
+                    headerList.add("Coupon for a 10% discount")
+                    headerList.add("at 'Bar da Bonte'")
+                    headerList.add("via Travai, 3 TN")
+                    headerList.add("")
+                    headerList.add("")
+
+                    val footerList = arrayListOf<String>()
+                    footerList.add("")
+                    footerList.add("")
+                    footerList.add("Scan the code with the app")
+                    footerList.add("to have it always with you")
+                    footerList.add("")
+
+                    val barcodeString =
+                        ConfigurationManager.getInstance(this)
+                            .storeId /*3 Chars for StoreID*/
+                            .plus(/*Special Char*/"-")
+                            .plus("ciaociao")
+
+                    val barcode = Barcode(
+                        headerList,
+                        footerList,
+                        CodeType.COD_39,
+                        barcodeString,
+                        StationType.RICEVUTA
+                    )
+
+                    it.printCoupon(barcode)
+
+                //}
+            } catch (e: Exception) {
+                e.printStackTrace()
+                e.message?.let { message ->
+                    Utils.showDialog(
+                        this@MainActivity,
+                        getString(R.string.error_dialog_title),
+                        message
+                    )
+                }
+            }
+        }
+
+
+
+
     }
 
     private fun broadcastPurchase() {
