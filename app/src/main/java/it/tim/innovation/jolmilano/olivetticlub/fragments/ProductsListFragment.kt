@@ -110,7 +110,7 @@ class ProductsListFragment : Fragment() {
             }
 
             syncProducts.setOnClickListener {
-                val token =
+                /*val token =
                     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImhhY2thdGhvbiIsInVzZXJUeXBlIjoicmVndWxhciIsImlhdCI6MTU2OTMzNDk0Mn0.wf6JYu6zt0gCxNPMPRWFae9vvlZrj9eaRAgXJIDP3kM"
                 val baseURL = "https://www.selfscanner.net/wsbackend/users/hackathon/"
                 selfScannerRestServiceApi(token, baseURL).products()
@@ -139,7 +139,41 @@ class ProductsListFragment : Fragment() {
                             }
                         }
 
-                    })
+                    })*/
+
+                mProductsViewModel.insert(
+                    Item(
+                        "8000103",
+                        "Panino Camogli",
+                        "AutoGrill",
+                        "",
+                        "123123",
+                        400
+                    )
+                )
+
+                mProductsViewModel.insert(
+                    Item(
+                        "8000123",
+                        "Birra Moretti",
+                        "AutoGrill",
+                        "",
+                        "1231123",
+                        200
+                    )
+                )
+
+                mProductsViewModel.insert(
+                    Item(
+                        "5000123",
+                        "Caffettino",
+                        "AutoGrill",
+                        "",
+                        "126123",
+                        100
+                    )
+                )
+
 
             }
         }
@@ -192,7 +226,7 @@ class ProductAdapter(private val productList: List<Item>, private val context: C
         val view = LayoutInflater.from(context).inflate(R.layout.product_item, null)
 
         view.productName.text = productList[position].product
-        view.productPrice.text = "${productList[position].price}"
+        view.productPrice.text = "${productList[position].price/100}"
 
 
 
