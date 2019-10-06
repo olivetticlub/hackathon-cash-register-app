@@ -127,12 +127,12 @@ class ProductsListFragment : Fragment() {
                                 response.data.forEach { product ->
                                     mProductsViewModel.insert(
                                         Item(
-                                            product.productSku,
-                                            product.productName,
+                                            product.productSku?:"",
+                                            product.productName?:"",
                                             "",
                                             product.productImageUrl ?: "",
-                                            product.productSku,
-                                            product.productPrice
+                                            product.productSku?:"",
+                                            product.productPrice?:0
                                         )
                                     )
                                 }
@@ -178,10 +178,10 @@ interface SelfScannerRestServiceApi {
 data class SelfScannerResponse(val code: Int, val data: List<Product>)
 
 data class Product(
-    val productSku: String,
-    val productName: String,
+    val productSku: String?,
+    val productName: String?,
     val productImageUrl: String?,
-    val productPrice: Int
+    val productPrice: Int?
 )
 
 class ProductAdapter(private val productList: List<Item>, private val context: Context) :
